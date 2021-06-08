@@ -7,9 +7,19 @@
         </router-link>
       </template>
       <template #end>
-        <router-link to="/login-signup/login">
+        <router-link to="/login-signup/login" v-if="!loggedIn">
           <Button label="Iniciar sesión" icon="pi pi-users"/>
         </router-link>
+        <div v-if="loggedIn">
+          <div @click="toggle" class="avatar">
+            <Avatar label="U" size="large"/>
+            <i class="pi pi-fw pi-angle-down"></i>
+          </div>          
+          <div @click="toggle">
+            <Menu ref="menu" :model="avatarMenu" :popup="true"/>
+          </div>
+          
+        </div>
     </template>
     </Menubar>
   </div>
@@ -17,6 +27,7 @@
 
 <script>
 import axios from "axios";
+//import CarritoService from "../services/carrito.service";
 
 export default {
   name: "navbar",
@@ -24,13 +35,42 @@ export default {
     return {
       items: [
         {
-          label: "Cerrar sesión",
-          icon: "pi pi-fw pi-power-off",
-          visible: () => this.$store.state.auth.status.loggedIn,
-          command: () => this.$store.dispatch('auth/logout'),
+          label: "Inicio",
+          icon: "pi pi-fw pi-home",
+          to: "/"
         },
       ],
+      avatarMenu: [
+        {
+          label: "Mi perfil",
+          icon: 'pi pi-fw pi-id-card',
+          to: "/perfil"
+        },
+        {
+          label: "Mis pedidos",
+          icon: 'pi pi-fw pi-book',
+          to: "/perfil/pedidos"
+        },        
+        {
+          label: 'Cerrar sesión',
+          icon: 'pi pi-fw pi-sign-out',
+          command: () => {
+            this.$store.dispatch('auth/logout'); 
+            this.$router.push("/");
+            }
+        }
+      ]
     };
+  },
+  methods:{
+    toggle(event){
+      this.$refs.menu.toggle(event);
+    }
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
   },
   mounted() {
     axios
@@ -41,27 +81,37 @@ export default {
           var item1 = {
             label: "",
             to: "",
-            icon: "pi pi-fw pi-chevron-down",
             items: [],
           };
           item1.label = element.familiaItem;
-          item1.to = "/tienda/" + element.familiaItem;
-          console.log(element.subfamiliasItem);
+          //item1.to = "/tienda/" + element.familiaItem;
           element.subfamiliasItem.forEach((element) => {
             var item2 = {
               label: "",
-              to: "",
             };
             item2.label = element;
-            item2.to = "/tienda/" + element.familiaItem + "/" + element;
+            item2.to = "/tienda/" + item1.label + "/" + element;
+            item2.command = ()=>{this.$router.go("/tienda/"+item1.label+"/"+element)}
+            console.log(item2)
             item1.items.unshift(item2);
           });
 
-          this.items.unshift(item1);
+          this.items.push(item1);
         });
       });
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+a{
+  text-decoration: none;
+}
+
+.avatar{
+  background-color: #dee2e6;
+}
+.avatar:hover{
+  cursor: pointer;
+}
+</style>

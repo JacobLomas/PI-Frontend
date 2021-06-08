@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue';
 import store from './store';
+
+
+
 /**
  * Bootstrap & BootstrapVue
  */
@@ -25,6 +28,39 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Menubar from 'primevue/menubar';
 import TabMenu from 'primevue/tabmenu';
+import InputMask from 'primevue/inputmask';
+import Calendar from 'primevue/calendar';
+import InputSwitch from 'primevue/inputswitch';
+import InlineMessage from 'primevue/inlinemessage';
+import ToastService from 'primevue/toastservice';
+Vue.use(ToastService);
+import Toast from 'primevue/toast';
+import Avatar from 'primevue/avatar';
+import DataView from 'primevue/dataview';
+import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions';
+import Menu from 'primevue/menu';
+import Dropdown from 'primevue/dropdown';
+import Rating from 'primevue/rating';
+import Breadcrumb from 'primevue/breadcrumb';
+import Carousel from 'primevue/carousel';
+import ScrollTop from 'primevue/scrolltop';
+import PanelMenu from 'primevue/panelmenu';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';
+import MultiSelect from 'primevue/multiselect';
+import RadioButton from 'primevue/radiobutton';
+import InputNumber from 'primevue/inputnumber';
+import Dialog from 'primevue/dialog';
+import Textarea from 'primevue/textarea';
+import Toolbar from 'primevue/toolbar';
+import FileUpload from 'primevue/fileupload';
+import OverlayPanel from 'primevue/overlaypanel';
+import ConfirmPopup from 'primevue/confirmpopup';
+import ConfirmDialog from 'primevue/confirmdialog';
+import OrderList from 'primevue/orderlist';
+
+
 
 
 Vue.component('Password', Password);
@@ -32,7 +68,40 @@ Vue.component('InputText', InputText);
 Vue.component('Button', Button);
 Vue.component('Menubar', Menubar);
 Vue.component('TabMenu', TabMenu);
+Vue.component('InputMask', InputMask);
+Vue.component('Calendar', Calendar);
+Vue.component('InputSwitch', InputSwitch);
+Vue.component('InlineMessage', InlineMessage);
+Vue.component('Toast', Toast);
+Vue.component('Avatar', Avatar);
+Vue.component('DataView', DataView);
+Vue.component('DataViewLayoutOptions', DataViewLayoutOptions);
+Vue.component('Menu', Menu);
+Vue.component('Dropdown', Dropdown);
+Vue.component('Rating', Rating);
+Vue.component('Breadcrumb', Breadcrumb);
+Vue.component('Carousel', Carousel);
+Vue.component('ScrollTop', ScrollTop);
+Vue.component('PanelMenu', PanelMenu);
+Vue.component('DataTable', DataTable);
+Vue.component('Column', Column);
+Vue.component('ColumnGroup', ColumnGroup);
+Vue.component('MultiSelect', MultiSelect);
+Vue.component('RadioButton', RadioButton);
+Vue.component('InputNumber', InputNumber);
+Vue.component('Dialog', Dialog);
+Vue.component('Textarea', Textarea);
+Vue.component('Toolbar', Toolbar);
+Vue.component('FileUpload', FileUpload);
+Vue.component('OverlayPanel', OverlayPanel);
+Vue.component('ConfirmPopup', ConfirmPopup);
+Vue.component('ConfirmDialog', ConfirmDialog);
+Vue.component('OrderList', OrderList);
 
+
+
+import ConfirmationService from 'primevue/confirmationservice';
+Vue.use(ConfirmationService);
 
 
 Vue.use(PrimeVue, {

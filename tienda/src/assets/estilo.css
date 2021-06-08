@@ -1,0 +1,6 @@
+@media (prefers-color-scheme: light) {
+    @import '../../node_modules/primevue/resources/themes/bootstrap4-light-purple/theme.css';
+}
+@media (prefers-color-scheme: light) {
+    @import '../../node_modules/primevue/resources/themes/bootstrap4-dark-purple/theme.css';
+}

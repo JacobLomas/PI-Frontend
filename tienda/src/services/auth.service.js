@@ -9,12 +9,14 @@ class AuthService {
         mail: user.mail,
         password: user.password
       })
-      .then(response => {
+      .then((response, error) => {
         if (response.data.token) {
-          localStorage.setItem('user', JSON.stringify(response.data));
+          localStorage.setItem('user', JSON.stringify({token:response.data.token}));
+          return response.data;
         }
-
-        return response.data;
+        if(error) {
+          Promise.reject(error)
+        }
       });
   }
 
@@ -23,10 +25,14 @@ class AuthService {
   }
 
   register(user) {
-    return axios.post(API_URL + 'signup', {
-      nombre: user.nombre,
-      mail: user.mail,
-      password: user.password
+    return axios.post(API_URL + 'signup', user).then((response, error) => {
+      if (response.data.token) {
+        localStorage.setItem('user', JSON.stringify(response.data));
+        return response;
+      }
+      if(error) {
+        Promise.reject(error)
+      }
     });
   }
 }
