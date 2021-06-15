@@ -71,23 +71,20 @@
               />
               <label for="fechaNacimiento">Fecha de nacimiento</label>
             </span>
-            <div class="p-field p-field2">
+            <div class="p-float-label mt-4">
               <label for="name">Dirección</label>
               <InputText
                 id="direccion"
-                v-model.trim="usuario.xdireccion"
+                v-model="user.direccion"
                 required="true"
-                :disabled="usuario.xdireccion"
-                :class="{ 'p-invalid': !usuario.xdireccion }"
+                aria-placeholder="Direccion"
+                :class="{ 'p-invalid': !user.direccion }"
               />
-              <small class="p-invalid" v-if="!usuario.xdireccion"
-                >Dirección requerida.</small
-              >
             </div>
             <span class="p-inputgroup mt-4">
               <InputSwitch v-model="politicasAceptadas" name="privacidad" />
               <label class="ml-2" for="privacidad"
-                >Acepto la manipulacion de mis datos</label
+                >Acepto los <a href="https://ayudaleyprotecciondatos.es/wp-content/uploads/2018/07/terminos-condiciones-app.pdf" target="_blank" >términos y condiciones</a></label
               >
             </span>
           </div>
