@@ -14,7 +14,7 @@
     >
       <h3 class="mt-4 mb-4">Mi perfil</h3>
       <Menu :model="items" class="w-100" />
-      <Menu v-if="esAdmin" :model="itemsAdmin" class="mb-auto w-100" />
+      <Menu :visible.sync="esAdmin" :model="itemsAdmin" class="mb-auto w-100" />
     </Sidebar>
     <div class="col-12 d-flex mb-3" style="background-color: #efefef">
       <h1 class="ml-auto mt-4 mb-4">{{ Ruta }}</h1>
@@ -147,9 +147,12 @@ export default {
       if (res.data.success) this.fotoPerfil = res.data.usuario.ximagen;
     });
     UserService.esAdministrador().then((res)=>{
+      console.log(res)
       if(res.data.success && res.data.esAdministrador)
         this.esAdmin=true
-    }).catch()
+    }).catch((e)=>{
+      console.log(e)
+    })
   },
   methods: {
     actualizarContrasena() {
