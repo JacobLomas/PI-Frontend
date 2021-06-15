@@ -167,7 +167,7 @@ export default {
     };
   },
   mounted() {
-    this.carrito = this.$store.state.carritoStorage.carrito;
+    try{this.carrito = this.$store.state.carritoStorage.carrito;}catch(e){this.carrito=[]}
     const script = document.createElement("script");
     script.src =
       "https://www.paypal.com/sdk/js?client-id=" + paypalID + "&currency=EUR";
