@@ -147,7 +147,7 @@ export default {
       if (res.data.success) this.fotoPerfil = res.data.usuario.ximagen;
     });
     UserService.esAdministrador().then((res)=>{
-      if(res.data.success)
+      if(res.data.success && res.data.esAdministrador)
         this.esAdmin=true
     }).catch()
   },

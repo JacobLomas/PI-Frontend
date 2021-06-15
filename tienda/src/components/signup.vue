@@ -71,16 +71,16 @@
               />
               <label for="fechaNacimiento">Fecha de nacimiento</label>
             </span>
-            <div class="p-float-label mt-4">
-              <label for="name">Dirección</label>
+            <span class="p-float-label mt-4">
+              
               <InputText
                 id="direccion"
                 v-model="user.direccion"
                 required="true"
-                aria-placeholder="Direccion"
                 :class="{ 'p-invalid': !user.direccion }"
               />
-            </div>
+              <label for="name">Dirección</label>
+            </span>
             <span class="p-inputgroup mt-4">
               <InputSwitch v-model="politicasAceptadas" name="privacidad" />
               <label class="ml-2" for="privacidad"
