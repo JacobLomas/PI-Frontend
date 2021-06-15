@@ -27,26 +27,31 @@ export const carritoStorage = {
             Carrito.quitarArticulo(id, cantidad);
             commit('borrarArticulo')
         },
-        borrarCarrito({ commit }) {
+        borrarTodoCarrito({ commit }) {
             Carrito.borrarTodoCarrito()
             commit('borrarTodoCarrito')
+        },
+        actualizarCarrito({ commit },carrito){
+            Carrito.actualizarCarrito(carrito);
+            commit('actualizarCarrito')
         }
     },
     mutations: {
         anadirArticulo(state) {
-            state.status.vacio = false;
             state.carrito = Carrito.getCarrito();
+            state.status.vacio = state.carrito.length==0 ? true : false;
         },
         borrarArticulo(state) {
-            if (state.carrito.length == 0)
-                state.status.vacio = true;
-            else
-                state.status.vacio = false;
             state.carrito = Carrito.getCarrito();
+            state.status.vacio = state.carrito.length==0 ? true : false;
         },
         borrarTodoCarrito(state) {
-            state.status.vacio = true;
             state.carrito = null;
+            state.status.vacio = state.carrito ? state.carrito.length==0 ? true : false :false;
         },
+        actualizarCarrito(state){
+            state.carrito =  Carrito.getCarrito();
+            state.status.vacio = state.carrito.length==0 ? true : false;
+        }
     }
 };

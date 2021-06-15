@@ -291,11 +291,9 @@ export default {
   methods: {
     recargarSubF() {
       UserService.getSubFamilias().then((res) => {
-        console.log(res);
         if (res.data.success) {
           let subF = res.data.subfamilias;
           UserService.getFamilias().then((res) => {
-            console.log(res);
             if (res.data.success) {
               let familias = res.data.familias;
               subF.forEach((subF) => {
@@ -322,7 +320,6 @@ export default {
       this.submitted = false;
     },
     saveSubFamilia() {
-      console.log(this.subfamilia);
       UserService.postSubFamilia(this.subfamilia)
         .then((res) => {
           if (res.data.success) {

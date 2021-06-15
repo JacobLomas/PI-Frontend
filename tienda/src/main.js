@@ -2,7 +2,9 @@ import Vue from 'vue'
 import App from './App.vue';
 import store from './store';
 
-
+/* Vue resize images */
+import ImageUploader from 'vue-image-upload-resize'
+Vue.use(ImageUploader);
 
 /**
  * Bootstrap & BootstrapVue
@@ -59,6 +61,12 @@ import OverlayPanel from 'primevue/overlaypanel';
 import ConfirmPopup from 'primevue/confirmpopup';
 import ConfirmDialog from 'primevue/confirmdialog';
 import OrderList from 'primevue/orderlist';
+import Badge from 'primevue/badge';
+import Galleria from 'primevue/galleria';
+import Sidebar from 'primevue/sidebar';
+import ContextMenu from 'primevue/contextmenu';
+import Checkbox from 'primevue/checkbox';
+import Chart from 'primevue/chart';
 
 
 
@@ -97,6 +105,12 @@ Vue.component('OverlayPanel', OverlayPanel);
 Vue.component('ConfirmPopup', ConfirmPopup);
 Vue.component('ConfirmDialog', ConfirmDialog);
 Vue.component('OrderList', OrderList);
+Vue.component('Badge', Badge);
+Vue.component('Galleria', Galleria);
+Vue.component('Sidebar', Sidebar);
+Vue.component('ContextMenu', ContextMenu);
+Vue.component('Checkbox', Checkbox);
+Vue.component('Chart', Chart);
 
 
 
@@ -105,6 +119,7 @@ Vue.use(ConfirmationService);
 
 
 Vue.use(PrimeVue, {
+  devtool: 'source-map',
   ripple: true,
   locale: {
     accept: 'Aceptar',
@@ -141,26 +156,39 @@ Vue.component(Inicio);
 import Productos from './views/Productos'
 Vue.component(Productos);
 
+import footerPers from './components/footerPers'
+Vue.component('footerPers',footerPers);
+
+import artVisitados from './components/artVisitados'
+Vue.component('artVisitados',artVisitados);
+
 import LoginSignup from './views/LoginSignup'
 Vue.component(LoginSignup);
 
 /**
  * VueRouter
  */
- import VueRouter from 'vue-router'
- import Routes from './routes/routes';
- Vue.use(VueRouter)
+import VueRouter from 'vue-router'
+import Routes from './routes/routes';
+import './registerServiceWorker'
+Vue.use(VueRouter)
 // Objeto VueRouter
 const router = new VueRouter({
   routes: Routes,
-  mode: 'history'
+  /* mode: 'history' */
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = to.name;
+  window.scrollTo(0,0)
+  next();
+});
 
 
 /**
  * Lanzar Vue
  */
- Vue.config.productionTip = false
+Vue.config.productionTip = false
 new Vue({
   router: router,
   store,

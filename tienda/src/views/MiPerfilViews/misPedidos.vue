@@ -1,5 +1,5 @@
 <template>
-  <div class="pedidos">
+  <div class="mis-pedidos">
     <DataTable
       :value="pedidos"
       class="
@@ -28,7 +28,6 @@
           />
         </div>
       </template>
-
       <Column :expander="true" headerStyle="width: 3rem" />
       <Column field="cabecera.xpedido_id" header="Id" sortable>
         <template #body="slotProps">
@@ -39,13 +38,7 @@
       <Column field="cabecera.xnombre" header="Cliente" sortable>
         <template #body="slotProps">
           <span class="p-column-title">Cliente</span>
-          {{
-            slotProps.data.cabecera.xcliente_id +
-            " - " +
-            slotProps.data.cabecera.xnombre +
-            " " +
-            slotProps.data.cabecera.xapellidos
-          }}
+          {{ slotProps.data.cabecera.xnombre }}
         </template>
       </Column>
       <Column field="cabecera.xdireccion" header="Dirección" sortable>
@@ -70,15 +63,14 @@
           <Checkbox
             v-model="slotProps.data.cabecera.xentregado"
             :binary="true"
-            :disabled="slotProps.data.cabecera.xentregado || !slotProps.data.cabecera.xpagado"
-            @input="entregado($event, slotProps.data.cabecera.xpedido_id)"
+            disabled="disabled"
           />
         </template>
       </Column>
       <Column field="cabecera.xpedido_fecha" header="Fecha" sortable>
         <template #body="slotProps">
           <span class="p-column-title">Fecha</span>
-          {{ slotProps.data.cabecera.xpedido_fecha.split("T")[0] }}
+          {{ slotProps.data.cabecera.xpedido_fecha }}
         </template>
       </Column>
       <Column field="cabecera.xtotal" header="Total" sortable>
@@ -99,7 +91,7 @@
               p-datatable-responsive-demo
               p-datatable-striped
             "
-            dataKey="xpedido_lin_id"
+            dataKey=".xpedido_lin_id"
             :paginator="true"
             :rows="5"
             paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
@@ -111,18 +103,18 @@
               headerStyle="width:5rem"
               sortable
             >
-              <template #header>
-                <span class="">ID</span>
-              </template>
+            <template #header>
+              <span>Id</span>
+            </template>
               <template #body="slotProps">
                 <span class="p-column-title">ID</span>
                 {{ slotProps.data.xpedido_lin_id }}
               </template>
             </Column>
             <Column field="imagen" header="Imagen">
-              <template #header>
-                <span class="">Imagen</span>
-              </template>
+            <template #header>
+              <span>Imagen</span>
+            </template>
               <template #body="slotProps">
                 <span class="p-column-title">Imagen</span>
                 <img
@@ -133,36 +125,36 @@
               </template>
             </Column>
             <Column field="nombreArt" header="Artículo">
-              <template #header>
-                <span class="">Artículo</span>
-              </template>
+            <template #header>
+              <span>Artículo</span>
+            </template>
               <template #body="slotProps">
                 <span class="p-column-title">Artículo</span>
                 {{ slotProps.data.nombreArt }}
               </template>
             </Column>
             <Column field="precio" header="Precio">
-              <template #header>
-                <span class="">Precio</span>
-              </template>
+            <template #header>
+              <span>Precio</span>
+            </template>
               <template #body="slotProps">
                 <span class="p-column-title">Precio</span>
                 {{ slotProps.data.precio }} €
               </template>
             </Column>
             <Column field="xcantidad" header="Cantidad">
-              <template #header>
-                <span class="">Cantidad</span>
-              </template>
+            <template #header>
+              <span>Cantidad</span>
+            </template>
               <template #body="slotProps">
                 <span class="p-column-title">Cantidad</span>
                 {{ slotProps.data.xcantidad }}
               </template>
             </Column>
             <Column field="xsubtotal" header="Subtotal">
-              <template #header>
-                <span class="">Subtotal</span>
-              </template>
+            <template #header>
+              <span>Subtotal</span>
+            </template>
               <template #body="slotProps">
                 <span class="p-column-title">Subtotal</span>
                 {{ slotProps.data.xsubtotal }} €
@@ -187,7 +179,7 @@
 <script>
 import UserService from "../../services/user.service";
 export default {
-  name: "pedidos",
+  name: "misPedidos",
   data() {
     return {
       pedidos: [],
@@ -195,7 +187,7 @@ export default {
     };
   },
   async mounted() {
-    let ped = await UserService.getTodosPedidos();
+    let ped = await UserService.getPedidos();
     this.pedidos = ped.data.pedidos;
   },
   methods: {
@@ -207,27 +199,6 @@ export default {
     },
     collapseAll() {
       this.expandedRows = null;
-    },
-    entregado(event, pedidoId) {
-      if (event) {
-        UserService.postEntregarPedido(pedidoId)
-          .then((res) => {
-            if (res.data.success) {
-              this.$toast.add({
-                severity: "info",
-                summary: "Pedido " + pedidoId + " entregado",
-                life: 800,
-              });
-            }
-          })
-          .catch(() => {
-            this.$toast.add({
-              severity: "error",
-              summary: "Error al entregar el pedido",
-              life: 800,
-            });
-          });
-      }
     },
   },
 };
@@ -242,7 +213,6 @@ export default {
   box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
 }
 .orders-subtable {
-  padding: 1.5rem;
-  margin-left: 1rem;
+  padding: 1rem;
 }
 </style>

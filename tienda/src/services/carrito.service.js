@@ -2,6 +2,9 @@ class Carrito{
     getCarrito(){
         return JSON.parse(localStorage.getItem("carrito"));
     }
+    actualizarCarrito(carrito){
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+    }   
     anadirArticulo(articulo){
         var carrito = this.getCarrito();
         if(!carrito || carrito.length==0){
@@ -27,7 +30,7 @@ class Carrito{
             }
                 
         }
-        localStorage.setItem("carrito", JSON.stringify(carrito));
+        this.actualizarCarrito(carrito)
     }
     quitarArticulo(id, cantidad=-1){
         var carrito = this.getCarrito();
@@ -42,7 +45,7 @@ class Carrito{
             carrito.splice(i,1);
         else 
             carrito[i].cantidad = cantidad - carrito[i].cantidad
-        localStorage.setItem("carrito", JSON.stringify(carrito));
+        this.actualizarCarrito(carrito)
     }
     borrarTodoCarrito(){
         localStorage.removeItem("carrito");

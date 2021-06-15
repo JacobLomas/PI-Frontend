@@ -12,7 +12,8 @@
         </router-link>
         <div v-if="loggedIn">
           <div @click="toggle" class="avatar">
-            <Avatar label="U" size="large"/>
+            <Avatar v-if="!fotoPerfil" icon="pi pi-user" size="large"/>
+            <Avatar v-if="fotoPerfil" :image="'http://13.58.30.123:8000'+fotoPerfil" size="large"/>
             <i class="pi pi-fw pi-angle-down"></i>
           </div>          
           <div @click="toggle">
@@ -27,12 +28,13 @@
 
 <script>
 import axios from "axios";
-//import CarritoService from "../services/carrito.service";
+import UserService from "../services/user.service";
 
 export default {
   name: "navbar",
   data() {
     return {
+      fotoPerfil:null,
       items: [
         {
           label: "Inicio",
@@ -50,7 +52,7 @@ export default {
           label: "Mis pedidos",
           icon: 'pi pi-fw pi-book',
           to: "/perfil/pedidos"
-        },        
+        },    
         {
           label: 'Cerrar sesión',
           icon: 'pi pi-fw pi-sign-out',
@@ -74,7 +76,7 @@ export default {
   },
   mounted() {
     axios
-      .get("http://localhost:8000/api/familias_subfamilias")
+      .get("http://13.58.30.123:8000/api/familias_subfamilias")
       .then((response) => {
         var data = response.data;
         data.forEach((element) => {
@@ -92,13 +94,16 @@ export default {
             item2.label = element;
             item2.to = "/tienda/" + item1.label + "/" + element;
             item2.command = ()=>{this.$router.go("/tienda/"+item1.label+"/"+element)}
-            console.log(item2)
             item1.items.unshift(item2);
           });
 
           this.items.push(item1);
         });
       });
+    UserService.getUsuario().then((res)=>{
+      if(res.data.success)
+        this.fotoPerfil = res.data.usuario.ximagen
+    })
   },
 };
 </script>

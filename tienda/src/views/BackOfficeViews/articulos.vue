@@ -21,7 +21,9 @@
     <DataTable
       :value="articulos"
       :paginator="true"
-      class="p-datatable-customers p-datatable-responsive-demo p-datatable-striped"
+      class="
+        p-datatable-customers p-datatable-responsive-demo p-datatable-striped
+      "
       :rows="10"
       dataKey="xarticulo_id"
       :rowHover="true"
@@ -62,7 +64,7 @@
         <template #body="slotProps">
           <span class="p-column-title">ID</span>
           <img
-            :src="'http://localhost:8000' + slotProps.data.ximagen"
+            :src="'http://13.58.30.123:8000' + slotProps.data.ximagen"
             width="80px"
           />
           <span class="image-text ml-2">{{ slotProps.data.xarticulo_id }}</span>
@@ -214,10 +216,10 @@
     >
       <FileUpload
         name="foto"
-        :multiple="false"
+        :multiple="true"
         accept="image/*"
         :maxFileSize="1000000"
-        :fileLimit="1"
+        :fileLimit="6"
         :customUpload="true"
         :showUploadButton="true"
         ref="file"
@@ -228,12 +230,17 @@
           <p>Arrastra hasta aquí la imagen</p>
         </template>
       </FileUpload>
-      <img
-        :src="'http://localhost:8000' + articulo.ximagen"
-        :alt="articulo.ximagen"
-        class="product-image"
-        v-if="articulo.ximagen"
-      />
+      <Carousel :value="imagenesArt" v-if="imagenesArt.length !=0" class="mt-1 pt-2">
+        <template #item="slotProps">
+          <img
+            :src="'http://13.58.30.123:8000' + slotProps.data.xruta"
+            :alt="slotProps.data.xruta"
+            class="product-image"
+            
+          />
+        </template>
+      </Carousel>
+
       <div class="p-field">
         <label for="name">Nombre</label>
         <InputText
@@ -241,9 +248,9 @@
           v-model.trim="articulo.xnombre"
           required="true"
           autofocus
-          :class="{ 'p-invalid': submitted && !articulo.xnombre }"
+          :class="{ 'p-invalid': !submitted && !articulo.xnombre }"
         />
-        <small class="p-invalid" v-if="submitted && !articulo.xnombre"
+        <small class="p-invalid" v-if="!submitted && !articulo.xnombre"
           >Nombre requerido.</small
         >
       </div>
@@ -336,7 +343,7 @@
       <div class="confirmation-content">
         <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
         <span v-if="articulo"
-          >Are you sure you want to delete <b>{{ articulo.xnombre }}</b
+          >¿Seguro que quieres eliminar <b>{{ articulo.xnombre }}</b
           >?</span
         >
       </div>
@@ -355,7 +362,7 @@
         />
       </template>
     </Dialog>
-
+    <!-- Dialogo de borrado multiple -->
     <Dialog
       :visible.sync="borrarArticulosDialog"
       :style="{ width: '450px' }"
@@ -404,6 +411,7 @@ export default {
       familias: [],
       subfamilias: [],
       submitted: false,
+      imagenesArt: [],
     };
   },
   computed: {
@@ -465,7 +473,20 @@ export default {
     },
     editArticulo(product) {
       this.articulo = { ...product };
-      this.articulosDialog = true;
+      UserService.getImagenesArt(this.articulo.xarticulo_id)
+        .then((res) => {
+          if (res.data.success) {
+            this.imagenesArt = res.data.imagenes;
+            this.imagenesArt.push({xruta:this.articulo.ximagen})
+          }
+          this.imagenesArt.push({xruta:this.articulo.ximagen})
+          this.articulosDialog = true;
+        })
+        .catch(() => {
+          this.articulosDialog = true;
+          this.imagenesArt.push({xruta:this.articulo.ximagen})
+        });
+
     },
     borrarArticulo() {
       UserService.deleteArticulo(this.articulo.xarticulo_id).then(
@@ -524,13 +545,18 @@ export default {
       this.articulo = {};
       this.submitted = false;
       this.articulosDialog = true;
+      this.imagenesArt = [];
+      
     },
     hideDialog() {
       this.articulosDialog = false;
+      this.imagenesArt = [];
       this.submitted = false;
     },
     saveProduct() {
       this.submitted = true;
+
+      //Si no hay xarticulo_id es porque se está dando de alta uno nuevo
       if (!this.articulo.xarticulo_id) {
         if (this.$refs.file.files[0]) {
           let foto = this.$refs.file.files[0];
@@ -540,6 +566,24 @@ export default {
             let url = response.data.url;
             this.articulo.ximagen = url;
             UserService.postNuevoArticulo(this.articulo).then((response) => {
+              let fotosRestantes = this.$refs.file.files;
+              fotosRestantes.shift();
+              fotosRestantes.forEach((fotoRes) => {
+                let fdFoto = new FormData();
+                fdFoto.append("image", fotoRes);
+                UserService.postSubirFotoArticulo(
+                  fdFoto,
+                  response.data.nuevoArticulo.xarticulo_id
+                ).catch(() => {
+                  this.$toast.add({
+                    severity: "error",
+                    resume: "Error",
+                    destail:
+                      "No se han podido subir algunas imagenes, avise al implantador",
+                  });
+                });
+              });
+
               this.$toast.add({
                 severity: "success",
                 summary: "Successful",
@@ -549,8 +593,6 @@ export default {
               this.articulo = {};
               this.submitted = false;
               this.articulosDialog = false;
-              console.log(response.data.nuevoArticulo);
-
               this.articulos.push(response.data.nuevoArticulo);
             });
           });
@@ -565,7 +607,6 @@ export default {
             this.articulo = {};
             this.submitted = false;
             this.articulosDialog = false;
-            console.log(response.data.nuevoArticulo);
             this.articulos.push(response.data.nuevoArticulo);
           });
         }
@@ -618,18 +659,12 @@ export default {
     },
     myUploader(event) {
       var foto = event.files[0];
-      console.log(foto);
       var formData = new FormData();
       formData.append("image", foto, "foto.jpg");
-      console.log(formData.getAll("image"));
       UserService.postSubirFoto(1, formData).then();
     },
     handleFileUpload() {
       this.file = this.$refs.file.files[0];
-      console.log(this.file);
-    },
-    prueba() {
-      console.log(this.$refs.file.files[0]);
     },
 
     findIndexById(id) {

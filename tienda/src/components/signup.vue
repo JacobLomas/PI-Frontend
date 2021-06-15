@@ -13,23 +13,23 @@
               <InputText
                 type="text"
                 v-model="user.nombre"
-                :class="{'p-invalid':!nameValidation}"
+                :class="{ 'p-invalid': !nameValidation }"
               />
               <label for="username">Nombre</label>
             </span>
             <span class="p-float-label mt-4">
-              <InputText 
-                type="text" 
-                v-model="user.apellidos" 
-                :class="{'p-invalid':!lastnameValidation}" 
+              <InputText
+                type="text"
+                v-model="user.apellidos"
+                :class="{ 'p-invalid': !lastnameValidation }"
               />
               <label for="username">Apellido</label>
             </span>
             <span class="p-float-label mt-4">
-              <InputText 
-              type="text" 
-              v-model="user.mail"
-              :class="{'p-invalid':!mailValidation}" 
+              <InputText
+                type="text"
+                v-model="user.mail"
+                :class="{ 'p-invalid': !mailValidation }"
               />
               <label for="username">Correo electrónico</label>
             </span>
@@ -41,7 +41,7 @@
                 :feedback="true"
                 :toggleMask="true"
                 type="text"
-                :class="{'p-invalid':!passwordValidation}" 
+                :class="{ 'p-invalid': !passwordValidation }"
               >
               </Password>
               <label for="password" class="d-block">Contraseña</label>
@@ -49,11 +49,11 @@
           </div>
           <div class="p-col-12 p-col-md-6 p-3">
             <span class="p-float-label">
-              <InputMask 
-              type="text" 
-              v-model="user.telf" 
-              mask="999-99-99-99" 
-              :class="{'p-invalid':!telfValidation}" 
+              <InputMask
+                type="text"
+                v-model="user.telf"
+                mask="999-99-99-99"
+                :class="{ 'p-invalid': !telfValidation }"
               />
               <label for="telf">Móvil</label>
             </span>
@@ -67,10 +67,23 @@
                 :yearNavigator="true"
                 :maxDate="new Date()"
                 :yearRange="'1900:' + new Date().getFullYear()"
-                :class="{'p-invalid':!fechaNacimientoValidation}" 
+                :class="{ 'p-invalid': !fechaNacimientoValidation }"
               />
               <label for="fechaNacimiento">Fecha de nacimiento</label>
             </span>
+            <div class="p-field p-field2">
+              <label for="name">Dirección</label>
+              <InputText
+                id="direccion"
+                v-model.trim="usuario.xdireccion"
+                required="true"
+                :disabled="usuario.xdireccion"
+                :class="{ 'p-invalid': !usuario.xdireccion }"
+              />
+              <small class="p-invalid" v-if="!usuario.xdireccion"
+                >Dirección requerida.</small
+              >
+            </div>
             <span class="p-inputgroup mt-4">
               <InputSwitch v-model="politicasAceptadas" name="privacidad" />
               <label class="ml-2" for="privacidad"
@@ -119,26 +132,39 @@ export default {
       return this.user.nombre && /^[a-zA-Z]{2,30}$/.test(this.user.nombre);
     },
     lastnameValidation() {
-      return this.user.apellidos && /^[a-zA-Z]{2,30}$/.test(this.user.apellidos);
+      return (
+        this.user.apellidos && /^[a-zA-Z]{2,30}$/.test(this.user.apellidos)
+      );
     },
     mailValidation() {
-        const regexp = /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
-        return this.user.mail && regexp.test(this.user.mail);
+      const regexp =
+        /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
+      return this.user.mail && regexp.test(this.user.mail);
     },
     passwordValidation() {
-      return this.user.password && this.user.password.length <= 30 && this.user.password.length >= 4;
+      return (
+        this.user.password &&
+        this.user.password.length <= 30 &&
+        this.user.password.length >= 4
+      );
     },
     telfValidation() {
       return this.user.telf && this.user.telf.length == 12;
     },
     fechaNacimientoValidation() {
-      return this.fechaDat!=null;
+      return this.fechaDat != null;
     },
-    sendForm(){
-      return this.nameValidation && this.lastnameValidation &&
-       this.mailValidation && this.passwordValidation && this.telfValidation &&
-       this.fechaNacimientoValidation && this.politicasAceptadas 
-    }
+    sendForm() {
+      return (
+        this.nameValidation &&
+        this.lastnameValidation &&
+        this.mailValidation &&
+        this.passwordValidation &&
+        this.telfValidation &&
+        this.fechaNacimientoValidation &&
+        this.politicasAceptadas
+      );
+    },
   },
   mounted() {
     if (this.loggedIn) {
@@ -161,18 +187,26 @@ export default {
         this.fechaDat.getFullYear();
       this.$store.dispatch("auth/register", this.user).then(
         (data) => {
-          console.log(data);
           this.message = data.descripcion;
-          this.$router.push("/")
-          this.$toast.add({severity:'success', summary: 'Inicio sesión', detail:this.message+" "+this.user.nombre, life: 7000});
-
+          this.$router.push("/");
+          this.$toast.add({
+            severity: "success",
+            summary: "Inicio sesión",
+            detail: this.message + " " + this.user.nombre,
+            life: 7000,
+          });
         },
         (error) => {
           this.message =
             (error.response && error.response.data) ||
             error.message ||
             error.toString();
-            this.$toast.add({severity:'error', summary: 'Error inicio sesión', detail:this.message.descripcion, life: 7000});
+          this.$toast.add({
+            severity: "error",
+            summary: "Error inicio sesión",
+            detail: this.message.descripcion,
+            life: 7000,
+          });
           this.submitted = false;
         }
       );

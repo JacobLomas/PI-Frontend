@@ -1,6 +1,11 @@
 <template>
   <div class="boton-carrito ml-auto mr-4 w-25 d-flex mt-2">
-    <Button id="carrito" class="p-button-rounded" @click="toggle">
+    <Button
+      id="carrito"
+      class="p-button-rounded"
+      badge="1"
+      @click="toggle"
+    >
       <div class="d-block p-1">
         <i class="pi pi-shopping-cart"></i>
       </div>
@@ -27,7 +32,7 @@
         <Column header="Imagen">
           <template #body="slotProps">
             <img
-              :src="'http://localhost:8000' + slotProps.data.ximagen"
+              :src="'http://13.58.30.123:8000' + slotProps.data.ximagen"
               :alt="slotProps.data.ximagen"
               class="product-image"
             />
@@ -47,11 +52,12 @@
               decrementButtonIcon="pi pi-minus"
               :min="1"
               :max="slotProps.data.xstock"
+              @input="actualizarCarrito"
             >
             </InputNumber>
           </template>
         </Column>
-        <Column field="xprecio" header="Price" sortable>
+        <Column field="xprecio" header="Precio">
           <template #body="slotProps">
             {{ slotProps.data.xprecio }} €
           </template>
@@ -76,7 +82,7 @@
               label="Pasar por caja"
               class="p-button-outlined p-button-raised"
               @click="irCarrito()"
-              :disabled="!carrito ||carrito.length<0"
+              :disabled="!carrito || carrito.length < 0"
             >
             </Button>
           </div>
@@ -100,6 +106,11 @@ export default {
     },
   },
   methods: {
+    actualizarCarrito() {
+      while (!this.carrito) {
+        this.$store.dispatch("carritoStorage/actualizarCarrito", this.carrito);
+      }
+    },
     toggle(event) {
       this.$refs.op.toggle(event);
     },
@@ -110,9 +121,9 @@ export default {
         -1
       );
     },
-    irCarrito(){
-      this.$router.push('/carrito')
-    }
+    irCarrito() {
+      this.$router.push("/carrito");
+    },
   },
 };
 </script>

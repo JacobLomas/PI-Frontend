@@ -1,10 +1,11 @@
 <template>
   <div id="app" class="container-fluid">
-    <navbar v-if="routeBackOffice"></navbar>
-    <botonCarrito v-if="routeBackOffice && routeCarrito"></botonCarrito>
+    <navbar v-if="routeBackOffice && routePerfil"></navbar>
+    <botonCarrito v-if="routeBackOffice && routeCarrito && routePerfil"></botonCarrito>
     <router-view class="routerview"></router-view>
     <Toast position="top-right" />
-    <ScrollTop :threshold="200" />
+    <ScrollTop :threshold="200" />    
+    <footerPers/>
   </div>
 </template>
 
@@ -23,6 +24,9 @@ export default {
     },
     routeCarrito(){
       return this.$route.fullPath.split('/')[1] != "carrito"
+    },
+    routePerfil(){
+      return this.$route.fullPath.split('/')[1] != "perfil"
     }
   }
 }
@@ -38,5 +42,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+a{
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: none !important;
 }
 </style>

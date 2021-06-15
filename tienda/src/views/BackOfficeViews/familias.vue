@@ -236,7 +236,6 @@ export default {
   methods: {
     recargarSubF() {
       UserService.getFamilias().then((res) => {
-            console.log(res);
             if (res.data.success) {
               this.familias = res.data.familias;
               this.loading = false;
@@ -253,7 +252,6 @@ export default {
       this.submitted = false;
     },
     saveFamilia() {
-      console.log(this.familia);
       UserService.postFamilia(this.familia)
         .then((res) => {
           if (res.data.success) {
