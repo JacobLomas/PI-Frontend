@@ -14,7 +14,7 @@
     >
       <h3 class="mt-4 mb-4">Mi perfil</h3>
       <Menu :model="items" class="w-100" />
-      <Menu v-if="loggedIn" :model="itemsAdmin" class="mb-auto w-100" />
+      <Menu v-if="esAdmin" :model="itemsAdmin" class="mb-auto w-100" />
     </Sidebar>
     <div class="col-12 d-flex mb-3" style="background-color: #efefef">
       <h1 class="ml-auto mt-4 mb-4">{{ Ruta }}</h1>
@@ -62,6 +62,7 @@ export default {
   name: "MiPerfil",
   data() {
     return {
+      esAdmin:false,
       panelLeft: true,
       fotoPerfil: null,
       oldPass: "",
@@ -145,6 +146,10 @@ export default {
     UserService.getUsuario().then((res) => {
       if (res.data.success) this.fotoPerfil = res.data.usuario.ximagen;
     });
+    UserService.esAdministrador().then((res)=>{
+      if(res.data.success)
+        this.esAdmin=true
+    }).catch()
   },
   methods: {
     actualizarContrasena() {
